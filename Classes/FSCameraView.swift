@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-protocol FSCameraViewDelegate: class {
+protocol FSCameraViewDelegate: class,AVCaptureFileOutputRecordingDelegate {
     func cameraShotFinished(image: UIImage)
 }
 
@@ -27,6 +27,11 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
     var videoInput: AVCaptureDeviceInput?
     var imageOutput: AVCaptureStillImageOutput?
     var focusView: UIView?
+    
+    
+    //Video
+    var videoFileOutput = AVCaptureMovieFileOutput()
+    
 
     static func instance() -> FSCameraView {
         
@@ -64,6 +69,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
                 session.addInput(videoInput)
                 
                 imageOutput = AVCaptureStillImageOutput()
+                
                 
                 session.addOutput(imageOutput)
                 
@@ -103,12 +109,17 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         shotButton.setImage(shotImage, forState: .Normal)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForegroundNotification:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
+        let longPress = UILongPressGestureRecognizer(target: self, action: "longPressActionButton:")
+        shotButton.addGestureRecognizer(longPress)
+        
     }
     
     deinit {
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
+    
     
     func willEnterForegroundNotification(notification: NSNotification) {
         
@@ -222,6 +233,30 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             
         })
     }
+    
+    func longPressActionButton(gesture: UILongPressGestureRecognizer){
+        if gesture.state == UIGestureRecognizerState.Began{
+            startMovieCapture()
+        }else if gesture.state == UIGestureRecognizerState.Ended{
+            self.videoFileOutput.stopRecording()
+        }
+    }
+    
+    func startMovieCapture(){
+        
+        session?.addOutput(videoFileOutput)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+            
+//            let videoConnection = self.videoFileOutput.connectionWithMediaType(AVMediaTypeVideo)
+            let documentsURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+            let filePath = documentsURL.URLByAppendingPathComponent("videoCapture")
+                self.videoFileOutput.startRecordingToOutputFileURL(filePath, recordingDelegate: self.delegate)
+            
+        })
+
+        
+    }
+    
     
     @IBAction func flipButtonPressed(sender: UIButton) {
         
