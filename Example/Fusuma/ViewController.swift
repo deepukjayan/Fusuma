@@ -45,6 +45,9 @@ class ViewController: UIViewController, FusumaDelegate {
         
         print("Called just after dismissed FusumaViewController")
     }
+    func fusumaDismissedWithVideoFileURL(url:NSURL){
+        
+    }
     
     func fusumaCameraRollUnauthorized() {
         

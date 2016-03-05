@@ -14,6 +14,7 @@ public protocol FusumaDelegate: class {
     func fusumaImageSelected(image: UIImage)
     func fusumaDismissedWithImage(image: UIImage)
     func fusumaCameraRollUnauthorized()
+    func fusumaDismissedWithVideoFileURL(url:NSURL)
 }
 
 public var fusumaTintColor       = UIColor.hex("#009688", alpha: 1.0)
@@ -238,6 +239,7 @@ public final class FusumaViewController: UIViewController, FSCameraViewDelegate,
     }
     
     public func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
+        self.delegate?.fusumaDismissedWithVideoFileURL(outputFileURL)
         return
     }
     
