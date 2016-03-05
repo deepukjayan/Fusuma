@@ -239,7 +239,10 @@ public final class FusumaViewController: UIViewController, FSCameraViewDelegate,
     }
     
     public func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-        self.delegate?.fusumaDismissedWithVideoFileURL(outputFileURL)
+        self.dismissViewControllerAnimated(true, completion: {
+            self.delegate?.fusumaDismissedWithVideoFileURL(outputFileURL)
+
+            })
         return
     }
     
