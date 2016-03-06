@@ -249,7 +249,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             
 //            let videoConnection = self.videoFileOutput.connectionWithMediaType(AVMediaTypeVideo)
             let documentsURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-            let filePath = documentsURL.URLByAppendingPathComponent("videoCapture")
+            let filePath = documentsURL.URLByAppendingPathComponent("videoCapture.mp4")
                 self.videoFileOutput.startRecordingToOutputFileURL(filePath, recordingDelegate: self.delegate)
             
         })
