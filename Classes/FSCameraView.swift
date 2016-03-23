@@ -31,6 +31,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
     
     //Video
     var videoFileOutput = AVCaptureMovieFileOutput()
+
     
 
     static func instance() -> FSCameraView {
@@ -112,7 +113,8 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPressActionButton:")
         shotButton.addGestureRecognizer(longPress)
-        
+        videoFileOutput.movieFragmentInterval = CMTime(seconds: 1, preferredTimescale: 1)
+        session?.sessionPreset = AVCaptureSessionPresetMedium
     }
     
     deinit {
